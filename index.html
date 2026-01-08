@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เกมตอบคำถามกาพย์เรื่องพระไชยสุริยา</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Sarabun', 'Kanit', Arial, sans-serif;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 800px;
+            width: 100%;
+            padding: 40px;
+        }
+        
+        h1 {
+            color: #11998e;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2em;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .menu-title {
+            font-size: 2.5em;
+            color: #11998e;
+            margin-bottom: 30px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .menu-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .menu-btn {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            border: none;
+            padding: 20px 40px;
+            border-radius: 15px;
+            font-size: 1.3em;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(17, 153, 142, 0.3);
+        }
+
+        .menu-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(17, 153, 142, 0.4);
+        }
+
+        .rules-title {
+            font-size: 2em;
+            color: #11998e;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .rules-content {
+            background: #f0fdf4;
+            padding: 30px;
+            border-radius: 15px;
+            border-left: 5px solid #11998e;
+            margin-bottom: 30px;
+        }
+
+        .rule-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+
+        .rule-icon {
+            color: #11998e;
+            font-size: 1.5em;
+            margin-right: 15px;
+            min-width: 30px;
+        }
+
+        .rule-text {
+            font-size: 1.1em;
+            color: #333;
+        }
+
+        .back-btn {
+            background: #6b7280;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 10px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+        }
+
+        .back-btn:hover {
+            background: #4b5563;
+        }
+        
+        .score-board {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            padding: 15px;
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            border-radius: 10px;
+        }
+        
+        .score-item {
+            text-align: center;
+        }
+        
+        .score-label {
+            font-size: 0.9em;
+            color: #065f46;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        
+        .score-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #11998e;
+        }
+        
+        .question-container {
+            margin-bottom: 30px;
+        }
+        
+        .question-number {
+            color: #11998e;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        
+        .question {
+            font-size: 1.3em;
+            margin-bottom: 20px;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .option {
+            background: #f0fdf4;
+            border: 2px solid #d1fae5;
+            border-radius: 10px;
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1.05em;
+            display: flex;
+            align-items: center;
+        }
+        
+        .option-label {
+            font-weight: bold;
+            color: #11998e;
+            margin-right: 10px;
+            min-width: 30px;
+        }
+        
+        .option:hover:not(.disabled) {
+            background: #d1fae5;
+            border-color: #11998e;
+            transform: translateX(5px);
+        }
+        
+        .option.selected {
+            background: #11998e;
+            color: white;
+            border-color: #11998e;
+        }
+        
+        .option.selected .option-label {
+            color: white;
+        }
+        
+        .option.correct {
+            background: #10b981;
+            color: white;
+            border-color: #10b981;
+        }
+        
+        .option.correct .option-label {
+            color: white;
+        }
+        
+        .option.wrong {
+            background: #ef4444;
+            color: white;
+            border-color: #ef4444;
+        }
+        
+        .option.wrong .option-label {
+            color: white;
+        }
+        
+        .option.disabled {
+            cursor: not-allowed;
+            opacity: 0.8;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 10px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            margin-top: 20px;
+            box-shadow: 0 5px 15px rgba(17, 153, 142, 0.3);
+        }
+        
+        .btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(17, 153, 142, 0.4);
+        }
+        
+        .btn:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+            opacity: 0.6;
+        }
+        
+        .result-container {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .result-title {
+            font-size: 2em;
+            margin-bottom: 20px;
+            color: #11998e;
+        }
+        
+        .final-score {
+            font-size: 3em;
+            font-weight: bold;
+            color: #10b981;
+            margin: 20px 0;
+        }
+        
+        .percentage {
+            font-size: 1.5em;
+            color: #11998e;
+            margin-bottom: 20px;
+        }
+        
+        .result-message {
+            font-size: 1.2em;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        .feedback {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 1em;
+            line-height: 1.6;
+        }
+        
+        .feedback.correct {
+            background: #d1fae5;
+            color: #065f46;
+            border-left: 4px solid #10b981;
+        }
+        
+        .feedback.wrong {
+            background: #fee2e2;
+            color: #991b1b;
+            border-left: 4px solid #ef4444;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: #d1fae5;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #11998e 0%, #38ef7d 100%);
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="main-menu">
+            <div class="menu-title">📚 กาพย์เรื่องพระไชยสุริยา 📚</div>
+            <div class="subtitle">รายวิชาภาษาไทย ท ๒๑๑๐๑ ชั้นมัธยมศึกษาปีที่ ๑</div>
+            <div class="menu-buttons">
+                <button class="menu-btn" onclick="showRules()">📖 กฎกติกา</button>
+                <button class="menu-btn" onclick="startQuiz()">🎮 เริ่มเกม</button>
+            </div>
+        </div>
+
+        <div id="rules-section" class="hidden">
+            <div class="rules-title">📖 กฎกติกาการเล่น</div>
+            <div class="rules-content">
+                <div class="rule-item">
+                    <div class="rule-icon">✅</div>
+                    <div class="rule-text">มีคำถามทั้งหมด <strong>20 ข้อ</strong> เกี่ยวกับกาพย์เรื่องพระไชยสุริยา</div>
+                </div>
+                <div class="rule-item">
+                    <div class="rule-icon">🎯</div>
+                    <div class="rule-text">แต่ละข้อมี <strong>4 ตัวเลือก</strong> (ก. ข. ค. ง.) ให้เลือกคำตอบที่ถูกต้องเพียง 1 ข้อ</div>
+                </div>
+                <div class="rule-item">
+                    <div class="rule-icon">⏱️</div>
+                    <div class="rule-text"><strong>ไม่จำกัดเวลา</strong> - คิดอย่างรอบคอบก่อนตอบ</div>
+                </div>
+                <div class="rule-item">
+                    <div class="rule-icon">💡</div>
+                    <div class="rule-text">เลือกคำตอบแล้วกด "ตรวจคำตอบ" จะแสดงว่า<strong>ถูกหรือผิด</strong>ทันที</div>
+                </div>
+                <div class="rule-item">
+                    <div class="rule-icon">🏆</div>
+                    <div class="rule-text">คะแนนผ่าน <strong>60%</strong> (12 ข้อขึ้นไป) ถือว่าผ่านการทดสอบ</div>
+                </div>
+                <div class="rule-item">
+                    <div class="rule-icon">📊</div>
+                    <div class="rule-text">เมื่อจบเกมจะแสดง<strong>คะแนนรวม</strong>และ<strong>เปอร์เซ็นต์</strong>ของคุณ</div>
+                </div>
+                <div class="rule-item">
+                    <div class="rule-icon">🔄</div>
+                    <div class="rule-text">สามารถ<strong>เล่นซ้ำได้</strong>ไม่จำกัดครั้ง เพื่อฝึกฝนและท่องจำ</div>
+                </div>
+            </div>
+            <button class="back-btn" onclick="showMainMenu()">← กลับหน้าหลัก</button>
+        </div>
+
+        <div id="quiz-section" class="hidden">
+            <h1>📚 กาพย์เรื่องพระไชยสุริยา 📚</h1>
+            <div class="subtitle">รายวิชาภาษาไทย ท ๒๑๑๐๑ ชั้นมัธยมศึกษาปีที่ ๑</div>
+            
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            
+            <div class="score-board">
+                <div class="score-item">
+                    <div class="score-label">คะแนน</div>
+                    <div class="score-value" id="score">0</div>
+                </div>
+                <div class="score-item">
+                    <div class="score-label">ข้อที่</div>
+                    <div class="score-value" id="current">1</div>
+                </div>
+                <div class="score-item">
+                    <div class="score-label">ทั้งหมด</div>
+                    <div class="score-value" id="total">20</div>
+                </div>
+            </div>
+            
+            <div id="quiz-container">
+                <div class="question-container">
+                    <div class="question-number">ข้อที่ <span id="q-number">1</span></div>
+                    <div class="question" id="question"></div>
+                </div>
+                
+                <div class="options" id="options"></div>
+                
+                <div id="feedback" class="feedback hidden"></div>
+                
+                <button class="btn" id="check-btn">ตรวจคำตอบ</button>
+            </div>
+            
+            <div id="result-container" class="result-container hidden">
+                <div class="result-title">🎉 เสร็จสิ้น! 🎉</div>
+                <div class="final-score" id="final-score"></div>
+                <div class="percentage" id="percentage"></div>
+                <div class="result-message" id="result-message"></div>
+                <button class="btn" onclick="restartQuiz()">🔄 ทำแบบทดสอบใหม่</button>
+                <button class="back-btn" style="margin-top: 15px;" onclick="backToMainMenu()">← กลับหน้าหลัก</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var questions = [
+            {
+                question: "เรื่องกาพย์เรื่องพระไชยสุริยาแต่งด้วยคำประพันธ์ประเภทใด",
+                options: ["กลอนแปด", "กาพย์ยานี ๑๑", "ร่ายสุภาพ", "โคลงสี่สุภาพ"],
+                correct: 1,
+                explanation: "กาพย์เรื่องพระไชยสุริยาแต่งด้วยกาพย์ยานี ๑๑"
+            },
+            {
+                question: "กาพย์เรื่องพระไชยสุริยามุ่งเน้นสิ่งใดเป็นสำคัญ",
+                options: ["มาตราตัวสะกด", "การแต่งคำประพันธ์", "การสอนให้คนทำความดี", "นำเสนอการเลือกประกอบอาชีพ"],
+                correct: 0,
+                explanation: "มุ่งเน้นมาตราตัวสะกดเป็นสำคัญ"
+            },
+            {
+                question: "ผู้แต่งกาพย์เรื่องพระไชยสุริยา คือใคร",
+                options: ["สุนทรภู่", "กรมพระยาดำรงราชานุภาพ", "เจ้าพระยาธรรมศักดิ์มนตรี", "กรมพระปรมานุชิตชิโนรส"],
+                correct: 0,
+                explanation: "สุนทรภู่เป็นผู้แต่ง"
+            },
+            {
+                question: "คำประพันธ์ประเภทใดที่ไม่ได้นำมาใช้แต่งเรื่องพระไชยสุริยา",
+                options: ["กาพย์สุรางคนางค์", "กาพย์ยานี ๑๑", "กาพย์ฉบัง ๑๖", "โคลงสี่สุภาพ"],
+                correct: 3,
+                explanation: "โคลงสี่สุภาพไม่ได้นำมาใช้"
+            },
+            {
+                question: "ข้อใดคือคุณค่าทางวรรณศิลป์ของกาพย์เรื่องพระไชยสุริยา",
+                options: ["มีสัมผัสภายในวรรค", "มีการสอดแทรกคำสอนทุกวรรค", "มีคติเตือนใจ", "วรรณคดีสโมสรยกย่อง"],
+                correct: 0,
+                explanation: "มีสัมผัสภายในวรรค"
+            },
+            {
+                question: "สำนวนใดจัดอยู่ในกาลกิณี ๔",
+                options: [
+                    "เมตตากรุณาสามัญ จะได้ไปสวรรค์",
+                    "อยู่มาหมู่ข้าเฝ้า ก็หาเยาวนารี",
+                    "ลูกศิษย์คิดล้างครู ลูกไม่รู้คุณพ่อมัน",
+                    "ค่ำเช้าเฝ้าสีซอ เข้าแต่หอล่อกามา"
+                ],
+                correct: 2,
+                explanation: "ลูกศิษย์คิดล้างครู จัดอยู่ในกาลกิณี ๔"
+            },
+            {
+                question: "ข้อความใดแสดงให้เห็นว่าคนมีความพอเพียงด้านทรัพยากร",
+                options: [
+                    "สุขเกษมเปรมปรีดิ์วิมาน อิ่มหนำสารา",
+                    "เดชะบุญกุศลหนหลัง สิ่งใดดังใจหวัง",
+                    "เห็นภัยในขันธสันดาน ตัดห่วงปวงมาร",
+                    "ข้าวปลาหาไปไม่เบา นารีที่เยาว์"
+                ],
+                correct: 3,
+                explanation: "ข้าวปลาหาไปไม่เบา แสดงความพอเพียง"
+            },
+            {
+                question: "ข้อใดมีตัวสะกดใน แม่กง มากที่สุด",
+                options: [
+                    "ภุมราการุญสุนทร ไว้หวังสั่งสอน",
+                    "ยูงทองร้องกระโต้งโห่งดัง เพียงฆ้องกลองระฆัง",
+                    "ขึ้นกดบทอัศจรรย์ เสียงครื้นครั่นชั้นเขาหลวง",
+                    "เบียนเบียดส่อเสียด ฉ้อฉลบาปกรรมนำตน"
+                ],
+                correct: 1,
+                explanation: "ยูงทอง ฆ้อง กลอง ระฆัง มีตัวสะกด ง"
+            },
+            {
+                question: "ข้อใดมีตัวสะกดใน แม่กน มากที่สุด",
+                options: [
+                    "ลูกศิษย์คิดล้างครู ลูกไม่รู้คุณพ่อมัน",
+                    "ยูงทองร้องกระโต้งโห่งดัง เพียงฆ้องกลองระฆัง",
+                    "ตึกร้านบ้านเรือนโรง โคลงคลอนเคลื่อนเขยื้อนโยน",
+                    "เบียนเบียดส่อเสียดฉ้อฉล บาปกรรมนำตน"
+                ],
+                correct: 2,
+                explanation: "ตึกร้าน บ้านเรือนโรง โคลงคลอน มีตัวสะกด น"
+            },
+            {
+                question: "กาพย์สุรางคนางค์ ๑ บทมีกี่คำ",
+                options: ["๑๑ คำ", "๑๖ คำ", "๒๘ คำ", "๓๒ คำ"],
+                correct: 2,
+                explanation: "กาพย์สุรางคนางค์ ๑ บท มี ๒๘ คำ"
+            },
+            {
+                question: "ข้อใดที่ผู้แต่งกาพย์เรื่องพระไชยสุริยา ไม่ได้จัดไว้ในเรื่อง",
+                options: ["การแต่งคำประพันธ์", "เรื่องของต้นไม้", "เรื่องของสัตว์ป่า", "เรื่องของนรก - สวรรค์"],
+                correct: 3,
+                explanation: "เรื่องของนรก-สวรรค์ไม่ได้จัดไว้"
+            },
+            {
+                question: "คำว่า \"กินเพลิง\" หมายความว่าอย่างไร",
+                options: ["นอนผึ่งแดด", "ผิงไฟ", "กินของร้อน", "กินของเผ็ด"],
+                correct: 1,
+                explanation: "กินเพลิง หมายถึง ผิงไฟ"
+            },
+            {
+                question: "คำว่า \"ตรีชา\" หมายความว่าอย่างไร",
+                options: ["เล่นดนตรี", "โบสถ์", "ดูถูก", "ยกย่อง"],
+                correct: 2,
+                explanation: "ตรีชา หมายถึง ดูถูก"
+            },
+            {
+                question: "คำว่า \"ศีรษะไม้\" หมายความว่าอย่างไร",
+                options: ["หัวล้าน", "หัวดื้อ", "หัวแข็ง", "หัวอ่อน"],
+                correct: 1,
+                explanation: "ศีรษะไม้ หมายถึง หัวดื้อ"
+            },
+            {
+                question: "ข้อใดแสดงให้เห็นถึงการฉ้อราษฎร์บังหลวงของพวกขุนนาง",
+                options: [
+                    "หาได้ใครหาเอา ไพร่ฟ้าเศร้าเปล่าอุรา",
+                    "ข้าเฝ้าเหล่าเสนา หนีพาราไปหาไกล",
+                    "พาราสาวะถี ใครไม่มีปรานีใคร",
+                    "เถ้าแก่ชาวแม่แซ่มา เสนีเสนา"
+                ],
+                correct: 0,
+                explanation: "หาได้ใครหาเอา ไพร่ฟ้าเศร้า แสดงการฉ้อราษฎร์"
+            },
+            {
+                question: "คำว่า \"ชีบา\" หมายความว่าอย่างไร",
+                options: ["นักบวชผู้หญิง", "นักบวชผู้ชาย", "นักบวชผู้รู้", "พระฤๅษี"],
+                correct: 1,
+                explanation: "ชีบา หมายถึง นักบวชผู้ชาย"
+            },
+            {
+                question: "คำว่า \"สังวัจฉระ\" หมายความว่าอย่างไร",
+                options: ["เวลา", "อายุ", "สังขาร", "วนเวียน"],
+                correct: 2,
+                explanation: "สังวัจฉระ หมายถึง สังขาร"
+            },
+            {
+                question: "ข้อใดหมายถึง หญิงผู้เป็นใหญ่",
+                options: ["เยาวมาลย์", "อรไท", "นารี", "ยุพิน"],
+                correct: 1,
+                explanation: "อรไท หมายถึง หญิงผู้เป็นใหญ่"
+            },
+            {
+                question: "ข้อใดตรงกับคำว่า \"กลียุค\"",
+                options: [
+                    "ข้าเฝ้าเหล่าเสนา หนีไปหาพาราไกล",
+                    "ข้าเฝ้าเหล่าเสนา มิได้ว่าหมู่ข้าไท ถือน้ำร่ำเข้าไป แต่น้ำใจไม่นำพา",
+                    "ไม่จำคำพระเจ้า เหไปเข้าภาษาไสย์",
+                    "น้ำบ่าเข้าธานี ก็ไม่มีที่อาศัย"
+                ],
+                correct: 1,
+                explanation: "ถือน้ำร่ำเข้าไป แต่น้ำใจไม่นำพา ตรงกับกลียุค"
+            },
+            {
+                question: "ข้อใดต่อไปนี้เป็นชื่อนก",
+                options: ["พญาลอ", "พญาครุฑ", "พญามาร", "พญายม"],
+                correct: 0,
+                explanation: "พญาลอ เป็นชื่อนก"
+            }
+        ];
+
+        var currentQuestion = 0;
+        var score = 0;
+        var selectedAnswer = null;
+        var answered = false;
+
+        function showMainMenu() {
+            document.getElementById('main-menu').classList.remove('hidden');
+            document.getElementById('rules-section').classList.add('hidden');
+            document.getElementById('quiz-section').classList.add('hidden');
+        }
+
+        function showRules() {
+            document.getElementById('main-menu').classList.add('hidden');
+            document.getElementById('rules-section').classList.remove('hidden');
+            document.getElementById('quiz-section').classList.add('hidden');
+        }
+
+        function startQuiz() {
+            document.getElementById('main-menu').classList.add('hidden');
+            document.getElementById('rules-section').classList.add('hidden');
+            document.getElementById('quiz-section').classList.remove('hidden');
+            
+            currentQuestion = 0;
+            score = 0;
+            answered = false;
+            selectedAnswer = null;
+            
+            document.getElementById('score').textContent = '0';
+            document.getElementById('quiz-container').classList.remove('hidden');
+            document.getElementById('result-container').classList.add('hidden');
+            
+            loadQuestion();
+        }
+
+        function backToMainMenu() {
+            currentQuestion = 0;
+            score = 0;
+            answered = false;
+            selectedAnswer = null;
+            showMainMenu();
+        }
+
+        function loadQuestion() {
+            answered = false;
+            selectedAnswer = null;
+            
+            var q = questions[currentQuestion];
+            var progress = ((currentQuestion + 1) / questions.length) * 100;
+            document.getElementById('progress-fill').style.width = progress + '%';
+            
+            document.getElementById('question').textContent = q.question;
+            document.getElementById('q-number').textContent = currentQuestion + 1;
+            document.getElementById('current').textContent = currentQuestion + 1;
+            document.getElementById('total').textContent = questions.length;
+            document.getElementById('feedback').classList.add('hidden');
+            
+            var optionsContainer = document.getElementById('options');
+            optionsContainer.innerHTML = '';
+            
+            var labels = ['ก.', 'ข.', 'ค.', 'ง.'];
+            
+            for (var i = 0; i < q.options.length; i++) {
+                var div = document.createElement('div');
+                div.className = 'option';
+                div.setAttribute('data-index', i);
+                div.innerHTML = '<span class="option-label">' + labels[i] + '</span><span>' + q.options[i] + '</span>';
+                div.onclick = function() { 
+                    if (!answered) {
+                        selectOption(parseInt(this.getAttribute('data-index'))); 
+                    }
+                };
+                optionsContainer.appendChild(div);
+            }
+            
+            var btn = document.getElementById('check-btn');
+            btn.disabled = true;
+            btn.textContent = 'ตรวจคำตอบ';
+            btn.onclick = checkAnswer;
+        }
+
+        function selectOption(index) {
+            if (answered) return;
+            
+            var options = document.querySelectorAll('.option');
+            for (var i = 0; i < options.length; i++) {
+                options[i].classList.remove('selected');
+            }
+            options[index].classList.add('selected');
+            selectedAnswer = index;
+            document.getElementById('check-btn').disabled = false;
+        }
+
+        function checkAnswer() {
+            if (selectedAnswer === null || answered) return;
+            
+            answered = true;
+            var q = questions[currentQuestion];
+            var options = document.querySelectorAll('.option');
+            var feedback = document.getElementById('feedback');
+            
+            for (var i = 0; i < options.length; i++) {
+                options[i].classList.add('disabled');
+                if (i === q.correct) {
+                    options[i].classList.add('correct');
+                }
+                if (i === selectedAnswer && i !== q.correct) {
+                    options[i].classList.add('wrong');
+                }
+            }
+            
+            if (selectedAnswer === q.correct) {
+                score++;
+                document.getElementById('score').textContent = score;
+                feedback.className = 'feedback correct';
+                feedback.textContent = '✓ ถูกต้อง! ' + q.explanation;
+            } else {
+                feedback.className = 'feedback wrong';
+                var labels = ['ก', 'ข', 'ค', 'ง'];
+                feedback.textContent = '✗ ไม่ถูกต้อง คำตอบที่ถูกต้องคือ ' + labels[q.correct] + '. ' + q.options[q.correct];
+            }
+            
+            feedback.classList.remove('hidden');
+            
+            var btn = document.getElementById('check-btn');
+            btn.textContent = currentQuestion === questions.length - 1 ? 'ดูผลคะแนน' : 'ข้อถัดไป';
+            btn.disabled = false;
+            btn.onclick = nextQuestion;
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            
+            if (currentQuestion < questions.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            document.getElementById('quiz-container').classList.add('hidden');
+            document.getElementById('result-container').classList.remove('hidden');
+            
+            var percentage = (score / questions.length) * 100;
+            document.getElementById('final-score').textContent = score + ' / ' + questions.length;
+            document.getElementById('percentage').textContent = percentage.toFixed(0) + '%';
+            
+            var message = '';
+            if (percentage === 100) {
+                message = 'ยอดเยี่ยม! 🎉 คุณตอบถูกทุกข้อ เก่งมาก!';
+            } else if (percentage >= 80) {
+                message = 'ดีมาก! 👍 คุณมีความรู้เรื่องกาพย์เรื่องพระไชยสุริยาดีเยี่ยม';
+            } else if (percentage >= 60) {
+                message = 'ดีครับ! 📚 ผ่านเกณฑ์แล้ว ลองศึกษาเพิ่มเติมอีกนิดนะครับ';
+            } else if (percentage >= 50) {
+                message = 'พอใช้ 💪 ต้องตั้งใจอ่านให้มากขึ้นนะครับ';
+            } else {
+                message = 'ลองทบทวนบทเรียนอีกครั้งแล้วทำใหม่นะครับ 📖';
+            }
+            
+            document.getElementById('result-message').textContent = message;
+        }
+
+        function restartQuiz() {
+            currentQuestion = 0;
+            score = 0;
+            answered = false;
+            selectedAnswer = null;
+            document.getElementById('score').textContent = '0';
+            document.getElementById('quiz-container').classList.remove('hidden');
+            document.getElementById('result-container').classList.add('hidden');
+            loadQuestion();
+        }
+    </script>
+</body>
+</html>
